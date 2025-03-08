@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,6 +27,7 @@ public class ExternalApiClientImpl implements ExternalApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
+    @Retryable(interceptor = "retryInterceptor")
     public Double getPercentage() {
         try {
             log.info("Calling external API: {}", EXTERNAL_API_URL);

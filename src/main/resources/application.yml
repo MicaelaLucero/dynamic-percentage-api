@@ -21,5 +21,12 @@ spring:
   cache:
     type: redis
 
+retry:
+  maxAttempts: 3
+  backoffDelay: 2000
+rate-limit:
+  requests: 3
+  time-window-seconds: 60
+
 mockserver:
   url: ${MOCKSERVER_URL:http://localhost:9090/external-percentage}
