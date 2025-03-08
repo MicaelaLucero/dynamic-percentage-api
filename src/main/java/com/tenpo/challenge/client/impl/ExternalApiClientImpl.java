@@ -1,6 +1,7 @@
 package com.tenpo.challenge.client.impl;
 
 import com.tenpo.challenge.client.ExternalApiClient;
+import com.tenpo.challenge.dto.UpdatePercentageResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -54,7 +55,7 @@ public class ExternalApiClientImpl implements ExternalApiClient {
     }
 
     @Override
-    public String updatePercentage(Double newPercentage) {
+    public UpdatePercentageResponse updatePercentage(Double newPercentage) {
         resetWireMock();
 
         HttpEntity<String> request = createMockRequest(newPercentage);
@@ -77,7 +78,7 @@ public class ExternalApiClientImpl implements ExternalApiClient {
         }
     }
 
-    private String updateMockRequest(Double newPercentage, HttpEntity<String> request) {
+    private UpdatePercentageResponse updateMockRequest(Double newPercentage, HttpEntity<String> request) {
         try {
             ResponseEntity<String> response = restTemplate.exchange(
                     WIREMOCK_ADMIN_URL + "/mappings",
@@ -87,7 +88,9 @@ public class ExternalApiClientImpl implements ExternalApiClient {
             );
 
             log.info("WireMock updated with percentage: {}", newPercentage);
-            return "WireMock successfully updated with percentage: " + newPercentage;
+            return UpdatePercentageResponse.builder()
+                    .newPercentage(newPercentage)
+                    .build();
         } catch (Exception e) {
             log.error("Error updating WireMock", e);
             throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Error updating WireMock", e);
