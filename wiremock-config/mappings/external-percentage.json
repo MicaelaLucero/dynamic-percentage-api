@@ -1,0 +1,11 @@
+    {
+      "request": {
+        "method": "GET",
+        "url": "/external-percentage"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": { "percentage": 10.0 },
+        "headers": { "Content-Type": "application/json" }
+      }
+    }

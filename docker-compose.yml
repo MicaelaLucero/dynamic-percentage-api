@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: tenpo_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: tenpo_db
+      POSTGRES_USER: tenpo_user
+      POSTGRES_PASSWORD: tenpo_password
+    ports:
+      - "5432:5432"
+    networks:
+      - tenpo_network
+
+  redis:
+    image: redis:latest
+    container_name: tenpo_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - tenpo_network
+
+  wiremock:
+    image: wiremock/wiremock:latest
+    container_name: tenpo_wiremock
+    restart: always
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./wiremock-config:/home/wiremock
+    command: --global-response-templating --verbose --root-dir /home/wiremock
+    networks:
+      - tenpo_network
+
+  tenpo_app:
+    image: dynamic-percentage-api-app
+    container_name: tenpo_app
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+      - wiremock
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tenpo_db
+      SPRING_DATASOURCE_USERNAME: tenpo_user
+      SPRING_DATASOURCE_PASSWORD: tenpo_password
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    volumes:
+      - ./wiremock-config:/home/wiremock
+    networks:
+      - tenpo_network
+
+networks:
+  tenpo_network:
+    driver: bridge

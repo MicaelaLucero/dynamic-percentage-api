@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/tenpo_db}
+    username: ${SPRING_DATASOURCE_USERNAME:tenpo_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:tenpo_password}
+    driver-class-name: org.postgresql.Driver
+
+  redis:
+    host: ${SPRING_REDIS_HOST:localhost}
+    port: ${SPRING_REDIS_PORT:6379}
+    timeout: 5000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+  cache:
+    type: redis
+
+mockserver:
+  url: ${MOCKSERVER_URL:http://localhost:9090/external-percentage}
