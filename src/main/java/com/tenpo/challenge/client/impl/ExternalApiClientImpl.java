@@ -2,6 +2,8 @@ package com.tenpo.challenge.client.impl;
 
 import com.tenpo.challenge.client.ExternalApiClient;
 import com.tenpo.challenge.dto.UpdatePercentageResponse;
+import com.tenpo.challenge.exception.ExternalApiException;
+import com.tenpo.challenge.exception.InvalidApiResponseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -11,14 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
 
 import static com.tenpo.challenge.utils.Constants.EXTERNAL_API_URL;
 import static com.tenpo.challenge.utils.Constants.WIREMOCK_ADMIN_URL;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE;
 
 @Slf4j
 @Component
@@ -48,21 +47,26 @@ public class ExternalApiClientImpl implements ExternalApiClient {
             }
 
             log.error("Invalid response from external API: {}", response.getBody());
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Invalid response from external API");
-
+            throw new InvalidApiResponseException("Invalid response from external API");
+        } catch (InvalidApiResponseException e) {
+            log.error("Invalid response format from external API", e);
+            throw e;
         } catch (Exception e) {
             log.error("Error connecting to external API", e);
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "External API unavailable", e);
+            throw new ExternalApiException("External API unavailable", e);
         }
     }
 
     @Override
     public UpdatePercentageResponse updatePercentage(Double newPercentage) {
-        resetWireMock();
-
-        HttpEntity<String> request = createMockRequest(newPercentage);
-
-        return updateMockRequest(newPercentage, request);
+        try {
+            resetWireMock();
+            HttpEntity<String> request = createMockRequest(newPercentage);
+            return updateMockRequest(newPercentage, request);
+        } catch (Exception e) {
+            log.error("Error updating external API with new percentage: {}", newPercentage, e);
+            throw new ExternalApiException("Failed to update percentage in external API", e);
+        }
     }
 
     private void resetWireMock() {
@@ -75,8 +79,8 @@ public class ExternalApiClientImpl implements ExternalApiClient {
             );
             log.info("WireMock mappings reset successfully.");
         } catch (Exception e) {
-            log.error("Error resetting WireMock", e);
-            throw new ResponseStatusException(SERVICE_UNAVAILABLE, "Error resetting WireMock", e);
+            log.error("Failed to reset WireMock mappings", e);
+            throw new ExternalApiException("WireMock reset failed", e);
         }
     }
 
@@ -94,8 +98,8 @@ public class ExternalApiClientImpl implements ExternalApiClient {
                     .newPercentage(newPercentage)
                     .build();
         } catch (Exception e) {
-            log.error("Error updating WireMock", e);
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Error updating WireMock", e);
+            log.error("Failed to update WireMock with percentage: {}", newPercentage, e);
+            throw new ExternalApiException("Failed to update WireMock", e);
         }
     }
 

@@ -21,7 +21,7 @@ public class CalculationServiceImpl implements CalculationService {
         double sum = request.getFirstNumber() + request.getSecondNumber();
 
         PercentageResponse percentageResponse = percentageService.getPercentage();
-        double percentage = percentageService.getPercentage() != null ? percentageResponse.getPercentage() : 0.0;
+        double percentage = percentageResponse.getPercentage();
 
         log.info("Percentage used in calculation: {}", percentage);
         double result =  sum + (sum * (percentage / 100));

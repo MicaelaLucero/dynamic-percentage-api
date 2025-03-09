@@ -1,5 +1,6 @@
 package com.tenpo.challenge.repository.impl;
 
+import com.tenpo.challenge.exception.CacheException;
 import com.tenpo.challenge.repository.PercentageCacheRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,20 +22,29 @@ public class PercentageCacheRepositoryImpl implements PercentageCacheRepository 
     @Override
     public Double getCachedPercentage() {
         log.info("Checking cache in Redis...");
-        Object cachedValue = redisTemplate.opsForValue().get(CACHE_KEY);
+        try {
+            Object cachedValue = redisTemplate.opsForValue().get(CACHE_KEY);
 
-        if (cachedValue instanceof Number) {
-            log.info("Cache hit: {}", cachedValue);
-            return ((Number) cachedValue).doubleValue();
+            if (cachedValue instanceof Number) {
+                log.info("Cache hit: {}", cachedValue);
+                return ((Number) cachedValue).doubleValue();
+            }
+            return null;
+        } catch (Exception e) {
+            log.error("Failed to retrieve percentage from Redis", e);
+            throw new CacheException("Error accessing Redis cache");
         }
-        return null;
     }
 
     @Override
     public void savePercentage(Double percentage) {
         if (percentage != null) {
-            redisTemplate.opsForValue().set(CACHE_KEY, percentage, CACHE_EXPIRATION_SECONDS, TimeUnit.SECONDS);
-            log.info("Saved to Redis: {} (expires in {} seconds)", percentage, CACHE_EXPIRATION_SECONDS);
+            try {
+                redisTemplate.opsForValue().set(CACHE_KEY, percentage, CACHE_EXPIRATION_SECONDS, TimeUnit.SECONDS);
+                log.info("Saved to Redis: {} (expires in {} seconds)", percentage, CACHE_EXPIRATION_SECONDS);
+            } catch (Exception e) {
+                throw new CacheException("Failed to save percentage in Redis");
+            }
         }
     }
 }

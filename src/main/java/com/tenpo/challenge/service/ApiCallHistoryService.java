@@ -5,7 +5,6 @@ import com.tenpo.challenge.entity.ApiCallHistory;
 import org.springframework.data.domain.Pageable;
 
 public interface ApiCallHistoryService {
-
     PaginatedResponse<ApiCallHistory> getHistory(Pageable pageable);
     void saveApiCall(ApiCallHistory apiCallHistory);
 }
