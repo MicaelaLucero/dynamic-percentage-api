@@ -1,5 +1,6 @@
-package com.tenpo.challenge.config;
+package com.tenpo.challenge.config.http;
 
+import com.tenpo.challenge.config.security.RateLimitingInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

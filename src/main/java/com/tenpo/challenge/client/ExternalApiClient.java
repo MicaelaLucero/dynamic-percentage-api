@@ -1,6 +1,6 @@
 package com.tenpo.challenge.client;
 
-import com.tenpo.challenge.dto.UpdatePercentageResponse;
+import com.tenpo.challenge.model.dto.UpdatePercentageResponse;
 
 public interface ExternalApiClient {
     Double getPercentage();

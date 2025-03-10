@@ -20,14 +20,9 @@ public class GlobalExceptionHandler {
         return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "External API error", ex.getMessage());
     }
 
-    @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<Object> handleInvalidRequestException(InvalidRequestException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "Invalid request", ex.getMessage());
-    }
-
-    @ExceptionHandler(InvalidApiResponseException.class)
-    public ResponseEntity<Object> handleInvalidApiResponseException(InvalidApiResponseException ex) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid API response", ex.getMessage());
+    @ExceptionHandler(InvalidResponseException.class)
+    public ResponseEntity<Object> handleInvalidApiResponseException(InvalidResponseException ex) {
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid response", ex.getMessage());
     }
 
     @ExceptionHandler(InvalidPercentageException.class)
@@ -43,6 +38,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<Object> handleDatabaseException(DatabaseException ex) {
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Database error", ex.getMessage());
+    }
+
+    @ExceptionHandler(PercentageUnavailableException.class)
+    public ResponseEntity<Object> handlePercentageUnavailableException(PercentageUnavailableException ex) {
+        return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "Percentage unavailable", ex.getMessage());
     }
 
     @ExceptionHandler(RateLimitException.class)

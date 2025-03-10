@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.tenpo.challenge.utils.Constants.CACHE_EXPIRATION_SECONDS;
+import static com.tenpo.challenge.utils.Constants.CACHE_EXPIRATION_MINUTES;
 import static com.tenpo.challenge.utils.Constants.CACHE_KEY;
 
 @Repository
@@ -40,8 +40,8 @@ public class PercentageCacheRepositoryImpl implements PercentageCacheRepository 
     public void savePercentage(Double percentage) {
         if (percentage != null) {
             try {
-                redisTemplate.opsForValue().set(CACHE_KEY, percentage, CACHE_EXPIRATION_SECONDS, TimeUnit.SECONDS);
-                log.info("Saved to Redis: {} (expires in {} seconds)", percentage, CACHE_EXPIRATION_SECONDS);
+                redisTemplate.opsForValue().set(CACHE_KEY, percentage, CACHE_EXPIRATION_MINUTES, TimeUnit.MINUTES);
+                log.info("Saved to Redis: {} (expires in {} seconds)", percentage, CACHE_EXPIRATION_MINUTES);
             } catch (Exception e) {
                 throw new CacheException("Failed to save percentage in Redis");
             }

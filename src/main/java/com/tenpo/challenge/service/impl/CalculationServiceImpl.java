@@ -1,8 +1,9 @@
 package com.tenpo.challenge.service.impl;
 
-import com.tenpo.challenge.dto.CalculationRequest;
-import com.tenpo.challenge.dto.CalculationResponse;
-import com.tenpo.challenge.dto.PercentageResponse;
+import com.tenpo.challenge.model.dto.CalculationRequest;
+import com.tenpo.challenge.model.dto.CalculationResponse;
+import com.tenpo.challenge.model.dto.PercentageResponse;
+import com.tenpo.challenge.model.mapper.CalculationMapper;
 import com.tenpo.challenge.service.CalculationService;
 import com.tenpo.challenge.service.PercentageService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class CalculationServiceImpl implements CalculationService {
 
     private final PercentageService percentageService;
+    private final CalculationMapper calculationMapper;
 
     @Override
     public CalculationResponse calculate(CalculationRequest request) {
@@ -26,11 +28,6 @@ public class CalculationServiceImpl implements CalculationService {
         log.info("Percentage used in calculation: {}", percentage);
         double result =  sum + (sum * (percentage / 100));
 
-        return CalculationResponse.builder()
-                .firstNumber(request.getFirstNumber())
-                .secondNumber(request.getSecondNumber())
-                .percentage(percentage)
-                .result(result)
-                .build();
+        return calculationMapper.toResponse(request, percentage, result);
     }
 }

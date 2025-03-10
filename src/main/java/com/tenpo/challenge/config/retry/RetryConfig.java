@@ -1,4 +1,4 @@
-package com.tenpo.challenge.config;
+package com.tenpo.challenge.config.retry;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,14 +15,14 @@ public class RetryConfig {
     @Value("${retry.max-attempts}")
     private int maxAttempts;
 
-    @Value("${retry.backoff-delay}")
-    private long backoffDelay;
+    @Value("${retry.delay}")
+    private long delay;
 
     @Bean
     public RetryTemplate retryTemplate() {
         return RetryTemplate.builder()
                 .maxAttempts(maxAttempts)
-                .fixedBackoff(backoffDelay)
+                .fixedBackoff(delay)
                 .build();
     }
 

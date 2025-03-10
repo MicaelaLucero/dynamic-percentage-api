@@ -1,11 +1,11 @@
 package com.tenpo.challenge.service.impl;
 
 import com.tenpo.challenge.client.ExternalApiClient;
-import com.tenpo.challenge.dto.PercentageResponse;
-import com.tenpo.challenge.dto.UpdatePercentageResponse;
-import com.tenpo.challenge.exception.CacheException;
+import com.tenpo.challenge.model.dto.PercentageResponse;
+import com.tenpo.challenge.model.dto.UpdatePercentageResponse;
 import com.tenpo.challenge.exception.ExternalApiException;
 import com.tenpo.challenge.exception.InvalidPercentageException;
+import com.tenpo.challenge.exception.PercentageUnavailableException;
 import com.tenpo.challenge.repository.PercentageCacheRepository;
 import com.tenpo.challenge.service.PercentageService;
 import lombok.RequiredArgsConstructor;
@@ -25,25 +25,24 @@ public class PercentageServiceImpl implements PercentageService {
 
     @Override
     public PercentageResponse getPercentage() {
-        log.info("Searching in Redis cache...");
-        Double cachedValue = null;
-        try {
-            cachedValue = cacheRepository.getCachedPercentage();
-        } catch (CacheException e) {
-            log.error("Failed to retrieve percentage from Redis, proceeding without cache", e);
-        }
-        if (cachedValue != null) {
-            return new PercentageResponse(cachedValue, CACHE);
-        }
+        log.info("Searching percentage in external API...");
 
-        log.warn("No value found in cache. Searching in external API...");
         try {
             Double percentage = externalApiClient.getPercentage();
             cacheRepository.savePercentage(percentage);
             return new PercentageResponse(percentage, EXTERNAL_API);
+
         } catch (ExternalApiException e) {
+            log.warn("External API failed, searching percentage in Redis cache...");
+
+            Double cachedValue = cacheRepository.getCachedPercentage();
+            if (cachedValue != null) {
+                log.info("Using cached value: {}", cachedValue);
+                return new PercentageResponse(cachedValue, CACHE);
+            }
+
             log.error("External API failed, and no cached value is available.");
-            throw e;
+            throw new PercentageUnavailableException("External API failed, and no cached value is available.");
         }
     }
 

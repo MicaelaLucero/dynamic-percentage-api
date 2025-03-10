@@ -1,7 +1,7 @@
 package com.tenpo.challenge.controller;
 
-import com.tenpo.challenge.dto.CalculationRequest;
-import com.tenpo.challenge.dto.CalculationResponse;
+import com.tenpo.challenge.model.dto.CalculationRequest;
+import com.tenpo.challenge.model.dto.CalculationResponse;
 import com.tenpo.challenge.service.CalculationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

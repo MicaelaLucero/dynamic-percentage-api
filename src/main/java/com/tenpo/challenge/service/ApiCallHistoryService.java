@@ -1,10 +1,11 @@
 package com.tenpo.challenge.service;
 
-import com.tenpo.challenge.dto.PaginatedResponse;
-import com.tenpo.challenge.entity.ApiCallHistory;
+import com.tenpo.challenge.model.dto.ApiCallHistoryResponse;
+import com.tenpo.challenge.model.dto.PaginatedResponse;
+import com.tenpo.challenge.model.entity.ApiCallHistoryEntity;
 import org.springframework.data.domain.Pageable;
 
 public interface ApiCallHistoryService {
-    PaginatedResponse<ApiCallHistory> getHistory(Pageable pageable);
-    void saveApiCall(ApiCallHistory apiCallHistory);
+    PaginatedResponse<ApiCallHistoryResponse> getHistory(Pageable pageable);
+    void saveApiCall(ApiCallHistoryEntity apiCallHistoryEntity);
 }

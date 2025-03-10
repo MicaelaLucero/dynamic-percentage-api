@@ -1,4 +1,4 @@
-package com.tenpo.challenge.config;
+package com.tenpo.challenge.config.security;
 
 import com.tenpo.challenge.exception.RateLimitException;
 import io.github.bucket4j.*;

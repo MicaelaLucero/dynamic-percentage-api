@@ -1,4 +1,4 @@
-package com.tenpo.challenge.dto;
+package com.tenpo.challenge.model.dto;
 
 import lombok.*;
 
@@ -10,8 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PaginatedResponse<T> {
-    private List<T> data;
     private int currentPage;
     private int totalPages;
     private long totalElements;
+    private List<T> data;
 }

@@ -1,4 +1,4 @@
-package com.tenpo.challenge.config;
+package com.tenpo.challenge.config.cache;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

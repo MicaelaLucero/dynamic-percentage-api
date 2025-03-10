@@ -1,4 +1,4 @@
-package com.tenpo.challenge.entity;
+package com.tenpo.challenge.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApiCallHistory {
+public class ApiCallHistoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

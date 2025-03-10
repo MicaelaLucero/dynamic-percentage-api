@@ -1,7 +1,8 @@
 package com.tenpo.challenge.controller;
 
-import com.tenpo.challenge.dto.PaginatedResponse;
-import com.tenpo.challenge.entity.ApiCallHistory;
+import com.tenpo.challenge.model.dto.ApiCallHistoryResponse;
+import com.tenpo.challenge.model.dto.PaginatedResponse;
+import com.tenpo.challenge.model.entity.ApiCallHistoryEntity;
 import com.tenpo.challenge.service.ApiCallHistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,7 @@ public class ApiCallHistoryController {
     private final ApiCallHistoryService apiCallHistoryService;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponse<ApiCallHistory>> getHistory(Pageable pageable) {
+    public ResponseEntity<PaginatedResponse<ApiCallHistoryResponse>> getHistory(Pageable pageable) {
         return ResponseEntity.ok(apiCallHistoryService.getHistory(pageable));
     }
 }

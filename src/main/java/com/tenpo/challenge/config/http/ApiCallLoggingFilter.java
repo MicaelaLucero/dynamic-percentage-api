@@ -1,6 +1,6 @@
-package com.tenpo.challenge.config;
+package com.tenpo.challenge.config.http;
 
-import com.tenpo.challenge.entity.ApiCallHistory;
+import com.tenpo.challenge.model.entity.ApiCallHistoryEntity;
 import com.tenpo.challenge.service.ApiCallHistoryService;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -42,7 +42,7 @@ public class ApiCallLoggingFilter implements Filter {
         String endpoint = wrappedRequest.getRequestURI();
         String queryParams = getQueryParams(wrappedRequest);
 
-        ApiCallHistory apiCallHistory = ApiCallHistory.builder()
+        ApiCallHistoryEntity apiCallHistoryEntity = ApiCallHistoryEntity.builder()
                 .method(method)
                 .endpoint(endpoint + (queryParams.isEmpty() ? "" : "?" + queryParams))
                 .statusCode(wrappedResponse.getStatus())
@@ -51,7 +51,7 @@ public class ApiCallLoggingFilter implements Filter {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        apiCallHistoryService.saveApiCall(apiCallHistory);
+        apiCallHistoryService.saveApiCall(apiCallHistoryEntity);
 
         log.info("API Call Logged: [{} {}] -> Status: {}", method, endpoint, wrappedResponse.getStatus());
 

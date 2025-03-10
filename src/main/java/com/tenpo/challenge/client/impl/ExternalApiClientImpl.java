@@ -1,9 +1,10 @@
 package com.tenpo.challenge.client.impl;
 
 import com.tenpo.challenge.client.ExternalApiClient;
-import com.tenpo.challenge.dto.UpdatePercentageResponse;
+import com.tenpo.challenge.config.properties.ExternalApiProperties;
+import com.tenpo.challenge.model.dto.UpdatePercentageResponse;
 import com.tenpo.challenge.exception.ExternalApiException;
-import com.tenpo.challenge.exception.InvalidApiResponseException;
+import com.tenpo.challenge.exception.InvalidResponseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -16,22 +17,25 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
-import static com.tenpo.challenge.utils.Constants.EXTERNAL_API_URL;
-import static com.tenpo.challenge.utils.Constants.WIREMOCK_ADMIN_URL;
-
 @Slf4j
 @Component
 public class ExternalApiClientImpl implements ExternalApiClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+    private final ExternalApiProperties properties;
+
+    public ExternalApiClientImpl(RestTemplate restTemplate, ExternalApiProperties properties) {
+        this.restTemplate = restTemplate;
+        this.properties = properties;
+    }
 
     @Override
     @Retryable(interceptor = "retryInterceptor")
     public Double getPercentage() {
         try {
-            log.info("Calling external API: {}", EXTERNAL_API_URL);
+            log.info("Calling external API: {}", properties.getWiremockUrl());
             ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                    EXTERNAL_API_URL,
+                    properties.getWiremockUrl(),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<>() {}
@@ -47,8 +51,8 @@ public class ExternalApiClientImpl implements ExternalApiClient {
             }
 
             log.error("Invalid response from external API: {}", response.getBody());
-            throw new InvalidApiResponseException("Invalid response from external API");
-        } catch (InvalidApiResponseException e) {
+            throw new InvalidResponseException("Invalid response from external API");
+        } catch (InvalidResponseException e) {
             log.error("Invalid response format from external API", e);
             throw e;
         } catch (Exception e) {
@@ -59,22 +63,16 @@ public class ExternalApiClientImpl implements ExternalApiClient {
 
     @Override
     public UpdatePercentageResponse updatePercentage(Double newPercentage) {
-        try {
-            resetWireMock();
-            HttpEntity<String> request = createMockRequest(newPercentage);
-            return updateMockRequest(newPercentage, request);
-        } catch (Exception e) {
-            log.error("Error updating external API with new percentage: {}", newPercentage, e);
-            throw new ExternalApiException("Failed to update percentage in external API", e);
-        }
+        resetWireMock();
+        return updateMockRequest(newPercentage, createMockRequest(newPercentage));
     }
 
     private void resetWireMock() {
         try {
             restTemplate.exchange(
-                    WIREMOCK_ADMIN_URL + "/mappings/reset",
+                    properties.getWiremockAdminUrl() + "/mappings/reset",
                     HttpMethod.POST,
-                    null,
+                    HttpEntity.EMPTY,
                     String.class
             );
             log.info("WireMock mappings reset successfully.");
@@ -86,13 +84,12 @@ public class ExternalApiClientImpl implements ExternalApiClient {
 
     private UpdatePercentageResponse updateMockRequest(Double newPercentage, HttpEntity<String> request) {
         try {
-            ResponseEntity<String> response = restTemplate.exchange(
-                    WIREMOCK_ADMIN_URL + "/mappings",
+            restTemplate.exchange(
+                    properties.getWiremockAdminUrl() + "/mappings",
                     HttpMethod.POST,
                     request,
                     String.class
             );
-
             log.info("WireMock updated with percentage: {}", newPercentage);
             return UpdatePercentageResponse.builder()
                     .newPercentage(newPercentage)

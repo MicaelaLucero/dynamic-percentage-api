@@ -1,7 +1,7 @@
 package com.tenpo.challenge.controller;
 
-import com.tenpo.challenge.dto.PercentageResponse;
-import com.tenpo.challenge.dto.UpdatePercentageResponse;
+import com.tenpo.challenge.model.dto.PercentageResponse;
+import com.tenpo.challenge.model.dto.UpdatePercentageResponse;
 import com.tenpo.challenge.service.PercentageService;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

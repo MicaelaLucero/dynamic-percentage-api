@@ -1,4 +1,4 @@
-package com.tenpo.challenge.dto;
+package com.tenpo.challenge.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

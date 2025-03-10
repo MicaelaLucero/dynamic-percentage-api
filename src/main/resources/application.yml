@@ -23,10 +23,12 @@ spring:
 
 retry:
   maxAttempts: 3
-  backoffDelay: 2000
+  delay: 2000
 rate-limit:
   requests: 3
   time-window-seconds: 60
 
-mockserver:
-  url: ${MOCKSERVER_URL:http://localhost:9090/external-percentage}
+external:
+  api:
+    wiremockUrl: http://wiremock:8080/external-percentage
+    wiremockAdminUrl: http://wiremock:8080/__admin
