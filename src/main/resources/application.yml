@@ -30,5 +30,5 @@ rate-limit:
 
 external:
   api:
-    wiremockUrl: http://wiremock:8080/external-percentage
-    wiremockAdminUrl: http://wiremock:8080/__admin
+    wiremockUrl: http://nginx/external-percentage
+    wiremockAdminUrl: http://nginx/__admin
