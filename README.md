@@ -91,14 +91,62 @@ cd dynamic-percentage-api
 ```
 
 ### 2. Construir y Levantar los Servicios con Docker Compose
+
+ La API utiliza la imagen publicada en Docker Hub, por lo que no es necesario construir la imagen localmente, solo ejecutar:
 ```bash
-docker-compose up --build
+docker-compose up
+```
+Esto descargará la imagen de Docker Hub y levantará los servicios necesarios (PostgreSQL, Redis, WireMock, Nginx y la API).
+
+Para detener los contenedores, usa:
+```bash
+docker-compose down
 ```
 
 ### 3. Probar la API
 Puedes usar la colección de Postman para probar los endpoints. Descarga el archivo desde la raíz del proyecto e importa en Postman: `dynamic_api.postman_collection.json`
 
 También puedes probar manualmente usando `curl`:
+
+#### Realizar un cálculo
+```bash
+curl -X POST http://localhost/api/v1/calculations \
+     -H "Content-Type: application/json" \
+     -d '{"firstNumber": 100.00, "secondNumber": 50.00}'
+```
+**Respuesta esperada:**
+```json
+{
+  "firstNumber": 100.0,
+  "secondNumber": 50.0,
+  "percentage": 10.0,
+  "result": 165.0
+}
+```
+
+#### Consultar el historial de llamadas
+```bash
+curl -X GET http://localhost/api/v1/history
+```
+**Respuesta esperada:**
+```json
+{
+  "currentPage": 0,
+  "totalPages": 1,
+  "totalElements": 1,
+  "data": [
+    {
+      "method": "PUT",
+      "endpoint": "/api/v1/percentage?newPercentage=30",
+      "statusCode": 200,
+      "requestBody": "",
+      "responseBody": "{\"newPercentage\":30.0}",
+      "timestamp": "2025-03-11T04:04:29.901309"
+    }
+  ]
+}
+```
+---
 
 #### Obtener el porcentaje actual
 ```bash
@@ -122,29 +170,6 @@ curl -X PUT "http://localhost/api/v1/percentage?newPercentage=20"
   "newPercentage": 20.0
 }
 ```
-
-#### Realizar un cálculo
-```bash
-curl -X POST http://localhost/api/v1/calculations \
-     -H "Content-Type: application/json" \
-     -d '{"firstNumber": 100.00, "secondNumber": 50.00}'
-```
-**Respuesta esperada:**
-```json
-{
-  "firstNumber": 100.0,
-  "secondNumber": 50.0,
-  "percentage": 10.0,
-  "result": 165.0
-}
-```
-
-#### Consultar el historial de llamadas
-```bash
-curl -X GET http://localhost/api/v1/history
-```
-
----
 
 ## Endpoints Disponibles
 

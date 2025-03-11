@@ -48,12 +48,9 @@ services:
 
 
   tenpo_app:
-    image: dynamic-percentage-api-app
+    image: micalucero2022/dynamic-percentage-api-app:latest
     container_name: tenpo_app
     restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
