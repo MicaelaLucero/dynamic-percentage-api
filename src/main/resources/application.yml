@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/tenpo_db}
-    username: ${SPRING_DATASOURCE_USERNAME:tenpo_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:tenpo_password}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/tenpo_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
 
   redis:
@@ -30,5 +30,5 @@ rate-limit:
 
 external:
   api:
-    wiremockUrl: http://nginx/external-percentage
-    wiremockAdminUrl: http://nginx/__admin
+    wiremockUrl: http://localhost:8081/external-percentage
+    wiremockAdminUrl: http://localhost:8081/__admin
