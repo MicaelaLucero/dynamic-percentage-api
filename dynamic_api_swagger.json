@@ -1,0 +1,197 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Dynamic Percentage API",
+    "description": "API para realizar cálculos con un porcentaje dinámico configurable.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost/api/v1",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/percentage": {
+      "get": {
+        "summary": "Obtiene el porcentaje actual",
+        "description": "Devuelve el porcentaje dinámico desde la API externa o desde la caché en Redis.",
+        "responses": {
+          "200": {
+            "description": "Porcentaje obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "percentage": {
+                      "type": "number",
+                      "example": 10
+                    },
+                    "source": {
+                      "type": "string",
+                      "example": "CACHE"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Actualiza el porcentaje dinámico",
+        "description": "Permite modificar el porcentaje almacenado en la caché.",
+        "parameters": [
+          {
+            "name": "newPercentage",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Nuevo valor del porcentaje."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Porcentaje actualizado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "newPercentage": {
+                      "type": "number",
+                      "example": 20
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/calculations": {
+      "post": {
+        "summary": "Realiza un cálculo con el porcentaje dinámico",
+        "description": "Suma dos números y aplica un porcentaje adicional obtenido de la API externa o caché.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstNumber": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "secondNumber": {
+                    "type": "number",
+                    "example": 50
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cálculo realizado exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "firstNumber": {
+                      "type": "number",
+                      "example": 100
+                    },
+                    "secondNumber": {
+                      "type": "number",
+                      "example": 50
+                    },
+                    "percentage": {
+                      "type": "number",
+                      "example": 10
+                    },
+                    "result": {
+                      "type": "number",
+                      "example": 165
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/history": {
+      "get": {
+        "summary": "Obtiene el historial de llamadas a la API",
+        "description": "Devuelve un historial paginado de todas las llamadas realizadas a los endpoints.",
+        "responses": {
+          "200": {
+            "description": "Historial obtenido exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "currentPage": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "totalPages": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "totalElements": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "method": {
+                            "type": "string",
+                            "example": "POST"
+                          },
+                          "endpoint": {
+                            "type": "string",
+                            "example": "/api/v1/calculations"
+                          },
+                          "statusCode": {
+                            "type": "integer",
+                            "example": 200
+                          },
+                          "requestBody": {
+                            "type": "string",
+                            "example": "{\"firstNumber\":100, \"secondNumber\":50}"
+                          },
+                          "responseBody": {
+                            "type": "string",
+                            "example": "{\"result\":165}"
+                          },
+                          "timestamp": {
+                            "type": "string",
+                            "example": "2025-03-10T12:00:00Z"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
