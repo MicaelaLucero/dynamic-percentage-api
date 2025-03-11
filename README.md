@@ -103,6 +103,45 @@ Para detener los contenedores, usa:
 docker-compose down
 ```
 
+### Construir y Levantar los Servicios Localmente
+
+Para ejecutar la API sin Docker Compose, sigue estos pasos:
+
+1. **Conectarse a PostgreSQL**
+  - Asegúrate de que PostgreSQL esté corriendo en el puerto **5432** con las credenciales adecuadas.
+  - Crea la base de datos tenpo_db. Puedes hacerlo con los siguientes comandos:
+    ```bash
+    psql -h localhost -U {tu_user} -d {tu_password}
+    ```
+    ```bash
+    CREATE DATABASE tenpo_db;
+    ```
+    ```bash
+    \q
+    ```
+
+2. **Ejecutar Redis**
+  - Inicia Redis en el puerto **6379**. Puedes usar el siguiente comando:
+    ```bash
+    redis-server
+    ```
+
+3. **Levantar WireMock**
+  - Para simular la API externa con WireMock, ejecuta el siguiente comando en la raíz del proyecto:
+    ```bash
+    docker run --rm -p 8081:8080 -v $(pwd)/wiremock-config:/home/wiremock wiremock/wiremock:latest \
+      --global-response-templating --verbose --root-dir /home/wiremock
+    ```
+  - Esto iniciará WireMock en el puerto **8081**, utilizando el directorio `wiremock-config` para almacenar las configuraciones de respuestas simuladas.
+
+4. **Ejecutar la API**
+  - Una vez que PostgreSQL, Redis y WireMock estén en funcionamiento, ejecuta la aplicación Spring Boot:
+    ```bash
+    mvn spring-boot:run
+    ```
+
+Con estos pasos, la API estará en ejecución y lista para recibir solicitudes. 🚀
+
 ### 3. Probar la API
 Puedes usar la colección de Postman para probar los endpoints. Descarga el archivo desde la raíz del proyecto e importa en Postman: `dynamic_api.postman_collection.json`
 
