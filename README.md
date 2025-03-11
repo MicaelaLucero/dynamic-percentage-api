@@ -96,7 +96,7 @@ docker-compose up --build
 ```
 
 ### 3. Probar la API
-Puedes usar la colección de Postman para probar los endpoints. Descarga e importa en Postman: `Dynamic_Api.postman_collection.json`
+Puedes usar la colección de Postman para probar los endpoints. Descarga el archivo desde la raíz del proyecto e importa en Postman: `dynamic_api.postman_collection.json`
 
 También puedes probar manualmente usando `curl`:
 
