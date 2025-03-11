@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "7fa6703e-028e-4a3c-8f44-2778b41dd43d",
-		"name": "Dynamic Api",
+		"name": "Dynamic Api 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "20171742"
 	},
@@ -11,7 +11,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "{{baseUrl}}/api/v1/percentage"
+				"url": "http://localhost/api/v1/percentage"
 			},
 			"response": []
 		},
@@ -21,9 +21,9 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/v1/percentage?newPercentage=20",
+					"raw": "http://localhost/api/v1/percentage?newPercentage=20",
 					"host": [
-						"{{baseUrl}}"
+						"http://localhost"
 					],
 					"path": [
 						"api",
@@ -54,7 +54,7 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/api/v1/calculations"
+				"url": "http://localhost/api/v1/calculations"
 			},
 			"response": []
 		},
@@ -75,7 +75,7 @@
 						}
 					}
 				},
-				"url": "{{baseUrl}}/api/v1/history"
+				"url": "http://localhost/api/v1/history"
 			},
 			"response": []
 		}

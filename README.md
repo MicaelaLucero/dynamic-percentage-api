@@ -320,12 +320,6 @@ El challenge solo pedía la suma con porcentaje dinámico, pero decidí agregar 
     - Incluye un campo `source` que indica de dónde proviene el dato (`CACHE` o `EXTERNAL_API`).
 - `PUT /percentage` → Permite actualizar manualmente el porcentaje almacenado en la caché.
 
-Estos endpoints brindan mayor visibilidad y control sobre el porcentaje dinámico, permitiendo:
-
-- ✔️ Consultar el porcentaje sin necesidad de realizar una operación de cálculo.
-- ✔️ Conocer si el dato proviene de la caché o de la API externa, gracias al campo `source`.
-- ✔️ Modificar el porcentaje.
-
 ✔️ **Decisión clave:** Facilita la gestión del porcentaje actual, proporcionando información clara sobre su origen y permitiendo ajustes.
 
 ### 9️⃣ Manejo de Constantes en una Clase Separada
